@@ -33,4 +33,4 @@ print(wine_review.groupby("country").price.agg([min, max]))
 
 # groupbyメソッドで生産国をグループ化して、aggメソッドで独自関数を実行する。
 # ここではmin_max_funcを実行
-print(wine_review.groupby("country").price.agg(min_max_func))
+print(wine_review.groupby("country").points.agg(min_max_func))
