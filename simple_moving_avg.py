@@ -47,7 +47,7 @@ def logPrinter(log, logName):
 
 print(3 * "\n")
 
-# 単純移動平均の期間（日数）をinputで求める
+# 単純移動平均の期間（日数）をユーザからのinputで求める
 print("[単純移動平均の期間を選択]:")
 print("15日...0")
 print("50日...1")
@@ -65,7 +65,7 @@ elif smaDaysInput == "2":
 endDate = datetime.datetime.now()
 endDateUnix = int(time.mktime(endDate.timetuple()) * 1000)
 
-# 過去データの抽出期間（月数）をinputで求める
+# 過去データの抽出期間（月数）をユーザからのinputで求める
 print("[過去データの抽出期間（月数）を指定 1 ~ 12]:")
 spanMonth = int(input())
 
