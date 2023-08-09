@@ -9,6 +9,9 @@ from dateutil.relativedelta import relativedelta
 # モジュールusTickersModuleをインポート
 import usTickersModule as usTickers
 
+# モジュールmysqlDbConnectionをインポート
+import mysqlDbConnection as dbConnection
+
 
 # アプリケーションを終了させる関数
 def exit_sys(msg):
@@ -84,17 +87,12 @@ elif periodType == "years":
 else:
     exit_sys("対象期間の単位が不明です")
 
-db = None
-dbCursor = None
+connection, dbCursor = dbConnection.getCursor(
+    mysqlHost, mysqlUser, mysqlPassword, mysqlDatabase
+)
 
-# MySQLデータベースに接続。接続に失敗した場合は処理を終了する
-try:
-    db = mysql.connector.connect(
-        host=mysqlHost, user=mysqlUser, password=mysqlPassword, database=mysqlDatabase
-    )
-    dbCursor = db.cursor(buffered=True)
-except Error as e:
-    exit_sys("データベース接続に失敗しました。プロセスを終了します")
+if connection == None or dbCursor == None:
+    exit_sys("データベース接続に失敗しました")
 
 
 # テーブルus_aggregateから対象銘柄の指標を抽出。periodTypeが"days"、"months"もしくは"years"で抽出期間の条件が異なる
