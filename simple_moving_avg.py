@@ -1,13 +1,22 @@
 import pandas as pd
 import math
-import mysql.connector
 from mysql.connector import Error
 import datetime
 import time
 import dateutil.relativedelta as rDelta
+import sys
 
 # モジュールusTickersModuleをインポート
 import usTickersModule as usTickers
+
+# モジュールmysqlDbConnectionをインポート
+import mysqlDbConnection as dbConnection
+
+
+# 処理を強制終了させる関数
+def exitSys(msg):
+    print("[処理を終了します]: " + msg)
+    sys.exit()
 
 
 # us_aggregateテーブルから銘柄tkrの対象期間のtimestampと終値を抽出。
@@ -98,16 +107,13 @@ mysqlPassword = str(input())
 print("[MySQL database]:")
 mysqlDatabase = str(input())
 
-db = None
-dbCursor = None
-try:
-    db = mysql.connector.connect(
-        host=mysqlHost, user=mysqlUser, password=mysqlPassword, database=mysqlDatabase
-    )
-    dbCursor = db.cursor(buffered=True)
-except Error as e:
-    errorMsg = "データベース接続に失敗しました"
-    errorLogList.append(errorMsg)
+# データベース接続
+connection, dbCursor = dbConnection.getCursor(
+    mysqlHost, mysqlUser, mysqlPassword, mysqlDatabase
+)
+
+if connection == None or dbCursor == None:
+    exitSys("データベース接続に失敗しました")
 
 # 対象銘柄の選択。すべての銘柄もしくは個別指定。
 # 個別指定の場合はtickerListAllと照合
@@ -155,7 +161,7 @@ if dbCursor is not None:
 
                 try:
                     dbCursor.execute(inQuery, inVals)
-                    db.commit()
+                    connection.commit()
                     rowCountTotal += dbCursor.rowcount
                 except Error as e:
                     errorMsg = "[" + ticker + "] sma_us_aggregateテーブルへの追加に失敗しました"
