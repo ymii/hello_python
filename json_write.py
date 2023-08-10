@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 
 
-# pandasの辞書型をJSONファイルに出力する。appendDateがTrueの場合は
+# 辞書型をJSONファイルに出力する。appendDateがTrueの場合は
 # ファイル名の先頭にyyyyMMddが付く。
 def toJson(appendDate, filename, dict):
     if appendDate:
